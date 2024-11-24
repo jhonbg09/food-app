@@ -7,8 +7,11 @@ import { formatCurrency } from "@/src/utils";
 import { createOrder } from "@/action/create-order-action";
 import { OrderSchema } from "@/src/schema";
 import { toast } from "react-toastify"
+
+
 export default function OrderSummary() {
   const order = useStore((state) => state.order);
+  const clearOrder = useStore((state) => state.clearOrder);
   const total = useMemo(
     () => order.reduce((total, item) => total + item.quantity * item.price, 0),
     [order]
@@ -40,6 +43,7 @@ export default function OrderSummary() {
 
 
     toast.success("Pedido Realizado Correctamente")
+    clearOrder()
   };
   return (
     <aside className="lg:h-screen lg:overflow-y-scroll md:w-64 lg:w-96 p-5">
