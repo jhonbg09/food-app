@@ -5,8 +5,8 @@ import ProductsDetails from "./ProductsDetails";
 import { useMemo } from "react";
 import { formatCurrency } from "@/src/utils";
 import { createOrder } from "@/action/create-order-action";
-import { Orderschema } from "@/src/schema";
-
+import { OrderSchema } from "@/src/schema";
+import { toast } from "react-toastify"
 export default function OrderSummary() {
   const order = useStore((state) => state.order);
   const total = useMemo(
@@ -14,17 +14,32 @@ export default function OrderSummary() {
     [order]
   );
 
-  const handleCreateOrder = (formData: FormData) => {
+  const handleCreateOrder = async (formData: FormData) => {
     const data ={
-      name: formData.get("name")
+      name: formData.get("name"),
+      total,
+      order
     }
 
-    const result = Orderschema.safeParse(data)
+    const result = OrderSchema.safeParse(data)
     console.log(result)
+    if(!result.success) {
+      result.error.issues.forEach((issue)=>{
+        toast.error(issue.message)
+      })
+      return
+    }
 
-    return
 
-    createOrder();
+    const response = await createOrder(data);
+    if(response?.errors){
+      response.errors.forEach((issue)=>{
+        toast.error(issue.message)
+      })
+    }
+
+
+    toast.success("Pedido Realizado Correctamente")
   };
   return (
     <aside className="lg:h-screen lg:overflow-y-scroll md:w-64 lg:w-96 p-5">
