@@ -1,18 +1,25 @@
+"use client"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-import Link from "next/link"
+type AdminRoutesProps = {
+  link: {
+    url: string;
+    text: string;
+    blank: boolean;
+  };
+};
 
-type AdminRoutesProps= {
-    link: {
-        url: string;
-        text: string;
-        blank: boolean;
-    }
-}
-
-export default function AdminRoute({link}: AdminRoutesProps) {
+export default function AdminRoute({ link }: AdminRoutesProps) {
+  const pathname = usePathname()
+  const isActive = pathname.startsWith(link.url)
   return (
-    <Link className={`font-bold text-lg border-t border-gray-200 p-3 last-of-type:border-b`} href={link.url}>
-        {link.text}
+    <Link
+      className={`${isActive ? "bg-amber-400" : ""}  font-bold text-lg border-t border-gray-200 p-3 last-of-type:border-b`}
+      href={link.url}
+      target={link.blank ? "_blank" : ""}
+    >
+      {link.text}
     </Link>
-  )
+  );
 }
