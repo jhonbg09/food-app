@@ -28,10 +28,12 @@ export default async function SearchPage({searchParams}: {searchParams: {search:
       <div className="flex flex-col gap-5 lg:flex-row lg:justify-end">
         <ProductSearchForm/>
       </div>
-
-            <ProductTable
-                products={products} 
-            />
+        {products.length ? (
+             <ProductTable
+             products={products} 
+         />
+        ): <p className="text-center text-lg">No hay resultados</p>}
+           
         </>
         
     )
